@@ -65,7 +65,7 @@ matmul :: proc(am, bm, cm: ^Matrix) #no_bounds_check{
   }
 }
 
-add_dot_4x4 :: proc(k: int, a, b: packed_t, c: [][]f32) {
+add_dot_4x4 :: proc "contextless" (k: int, a, b: packed_t, c: [][]f32) {
 	c0 := simd.f32x4{} // 4x4 row 1
 	c1 := simd.f32x4{} // 4x4 row 2
 	c2 := simd.f32x4{} // ...
@@ -100,7 +100,7 @@ add_dot_4x4 :: proc(k: int, a, b: packed_t, c: [][]f32) {
 
 }
 
-pack_matrix_a :: proc(m: int, a: [][]f32, a_to: ^[]packed_t) {
+pack_matrix_a :: proc "contextless" (m: int, a: [][]f32, a_to: ^[]packed_t) {
   for ap, i in a_to{
     for ac, j in &ap {
       ac[0] = a[j][m+i*4 + 0]
@@ -111,7 +111,7 @@ pack_matrix_a :: proc(m: int, a: [][]f32, a_to: ^[]packed_t) {
   }
 }
 
-pack_matrix_b :: proc(k: int, b: [][]f32, b_to: ^[]packed_t) {
+pack_matrix_b :: proc "contextless" (k: int, b: [][]f32, b_to: ^[]packed_t) {
   for bp, i in b_to{
     b_i0_pntr := b[i*4+0][k:]
     b_i1_pntr := b[i*4+1][k:]
