@@ -50,7 +50,7 @@ matmul :: proc(am, bm, cm: ^Matrix){
   a, b, c:=am.data, bm.data, cm.data
   packed_a := make([]packed_t, mc / 4)
   packed_b := make([]packed_t, nc / 4)
-	for jc:=0; jc<n-1; jc+=nc{
+  for jc:=0; jc<n-1; jc+=nc{
     for pc:=0; pc<k-1; pc+=kc{
       pack_matrix_b(pc, b[jc:jc+nc], &packed_b)
       for ic:=0; ic<m-1; ic+=mc{
