@@ -65,72 +65,72 @@ matmul :: proc(am, bm, cm: ^Matrix) #no_bounds_check{
   }
 }
 
-add_dot_4x4 :: proc "contextless" (k: int, a, b: packed_t, c: [][]f32) {
-	c0 := simd.f32x4{} // 4x4 row 1
-	c1 := simd.f32x4{} // 4x4 row 2
-	c2 := simd.f32x4{} // ...
-	c3 := simd.f32x4{}
-	for i in 0 ..< kc {
-		ac0 := simd.f32x4{a[i][0], a[i][0], a[i][0], a[i][0]}
-		ac1 := simd.f32x4{a[i][1], a[i][1], a[i][1], a[i][1]}
-		ac2 := simd.f32x4{a[i][2], a[i][2], a[i][2], a[i][2]}
-		ac3 := simd.f32x4{a[i][3], a[i][3], a[i][3], a[i][3]}
-		br  := simd.f32x4{b[i][0], b[i][1], b[i][2], b[i][3]}
-		c0   = simd.fma(ac0, br, c0)
-		c1   = simd.fma(ac1, br, c1)
-		c2   = simd.fma(ac2, br, c2)
-		c3   = simd.fma(ac3, br, c3)
-	}
-	c[0][k+0] += simd.extract(c0, 0)
-	c[1][k+0] += simd.extract(c0, 1)
-	c[2][k+0] += simd.extract(c0, 2)
-	c[3][k+0] += simd.extract(c0, 3)
-	c[0][k+1] += simd.extract(c1, 0)
-	c[1][k+1] += simd.extract(c1, 1)
-	c[2][k+1] += simd.extract(c1, 2)
-	c[3][k+1] += simd.extract(c1, 3)
-	c[0][k+2] += simd.extract(c2, 0)
-	c[1][k+2] += simd.extract(c2, 1)
-	c[2][k+2] += simd.extract(c2, 2)
-	c[3][k+2] += simd.extract(c2, 3)
-	c[0][k+3] += simd.extract(c3, 0)
-	c[1][k+3] += simd.extract(c3, 1)
-	c[2][k+3] += simd.extract(c3, 2)
-	c[3][k+3] += simd.extract(c3, 3)
-}
 /* add_dot_4x4 :: proc "contextless" (k: int, a, b: packed_t, c: [][]f32) { */
-/* 	c0 := [4]f32{} // 4x4 row 1 */
-/* 	c1 := [4]f32{} // 4x4 row 2 */
-/* 	c2 := [4]f32{} // ... */
-/* 	c3 := [4]f32{} */
+/* 	c0 := simd.f32x4{} // 4x4 row 1 */
+/* 	c1 := simd.f32x4{} // 4x4 row 2 */
+/* 	c2 := simd.f32x4{} // ... */
+/* 	c3 := simd.f32x4{} */
 /* 	for i in 0 ..< kc { */
-/* 		ac0 := [4]f32{a[i][0], a[i][0], a[i][0], a[i][0]} */
-/* 		ac1 := [4]f32{a[i][1], a[i][1], a[i][1], a[i][1]} */
-/* 		ac2 := [4]f32{a[i][2], a[i][2], a[i][2], a[i][2]} */
-/* 		ac3 := [4]f32{a[i][3], a[i][3], a[i][3], a[i][3]} */
-/* 		br  := [4]f32{b[i][0], b[i][1], b[i][2], b[i][3]} */
-/* 		c0  += ac0*br */
-/* 		c1  += ac1*br */
-/* 		c2  += ac2*br */
-/* 		c3  += ac3*br */
+/* 		ac0 := simd.f32x4{a[i][0], a[i][0], a[i][0], a[i][0]} */
+/* 		ac1 := simd.f32x4{a[i][1], a[i][1], a[i][1], a[i][1]} */
+/* 		ac2 := simd.f32x4{a[i][2], a[i][2], a[i][2], a[i][2]} */
+/* 		ac3 := simd.f32x4{a[i][3], a[i][3], a[i][3], a[i][3]} */
+/* 		br  := simd.f32x4{b[i][0], b[i][1], b[i][2], b[i][3]} */
+/* 		c0   = simd.fma(ac0, br, c0) */
+/* 		c1   = simd.fma(ac1, br, c1) */
+/* 		c2   = simd.fma(ac2, br, c2) */
+/* 		c3   = simd.fma(ac3, br, c3) */
 /* 	} */
-/* 	c[0][k+0] += c0[0] */
-/* 	c[1][k+0] += c0[1] */
-/* 	c[2][k+0] += c0[2] */
-/* 	c[3][k+0] += c0[3] */
-/* 	c[0][k+1] += c1[0] */
-/* 	c[1][k+1] += c1[1] */
-/* 	c[2][k+1] += c1[2] */
-/* 	c[3][k+1] += c1[3] */
-/* 	c[0][k+2] += c2[0] */
-/* 	c[1][k+2] += c2[1] */
-/* 	c[2][k+2] += c2[2] */
-/* 	c[3][k+2] += c2[3] */
-/* 	c[0][k+3] += c3[0] */
-/* 	c[1][k+3] += c3[1] */
-/* 	c[2][k+3] += c3[2] */
-/* 	c[3][k+3] += c3[3] */
+/* 	c[0][k+0] += simd.extract(c0, 0) */
+/* 	c[1][k+0] += simd.extract(c0, 1) */
+/* 	c[2][k+0] += simd.extract(c0, 2) */
+/* 	c[3][k+0] += simd.extract(c0, 3) */
+/* 	c[0][k+1] += simd.extract(c1, 0) */
+/* 	c[1][k+1] += simd.extract(c1, 1) */
+/* 	c[2][k+1] += simd.extract(c1, 2) */
+/* 	c[3][k+1] += simd.extract(c1, 3) */
+/* 	c[0][k+2] += simd.extract(c2, 0) */
+/* 	c[1][k+2] += simd.extract(c2, 1) */
+/* 	c[2][k+2] += simd.extract(c2, 2) */
+/* 	c[3][k+2] += simd.extract(c2, 3) */
+/* 	c[0][k+3] += simd.extract(c3, 0) */
+/* 	c[1][k+3] += simd.extract(c3, 1) */
+/* 	c[2][k+3] += simd.extract(c3, 2) */
+/* 	c[3][k+3] += simd.extract(c3, 3) */
 /* } */
+add_dot_4x4 :: proc "contextless" (k: int, a, b: packed_t, c: [][]f32) {
+	c0 := [4]f32{} // 4x4 row 1
+	c1 := [4]f32{} // 4x4 row 2
+	c2 := [4]f32{} // ...
+	c3 := [4]f32{}
+  for i in 0 ..< kc {
+		ac0 := [4]f32{a[i][0], a[i][0], a[i][0], a[i][0]}
+		ac1 := [4]f32{a[i][1], a[i][1], a[i][1], a[i][1]}
+		ac2 := [4]f32{a[i][2], a[i][2], a[i][2], a[i][2]}
+		ac3 := [4]f32{a[i][3], a[i][3], a[i][3], a[i][3]}
+		br  := [4]f32{b[i][0], b[i][1], b[i][2], b[i][3]}
+		c0  += ac0*br
+		c1  += ac1*br
+		c2  += ac2*br
+		c3  += ac3*br
+	}
+	c[0][k+0] += c0[0]
+	c[1][k+0] += c0[1]
+	c[2][k+0] += c0[2]
+	c[3][k+0] += c0[3]
+	c[0][k+1] += c1[0]
+	c[1][k+1] += c1[1]
+	c[2][k+1] += c1[2]
+	c[3][k+1] += c1[3]
+	c[0][k+2] += c2[0]
+	c[1][k+2] += c2[1]
+	c[2][k+2] += c2[2]
+	c[3][k+2] += c2[3]
+	c[0][k+3] += c3[0]
+	c[1][k+3] += c3[1]
+	c[2][k+3] += c3[2]
+	c[3][k+3] += c3[3]
+}
 pack_matrix_a :: proc "contextless" (m: int, a: [][]f32, a_to: ^[]packed_t) {
   for ap, i in a_to{
     for ac, j in &ap {
